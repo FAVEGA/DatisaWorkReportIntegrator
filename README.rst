@@ -21,4 +21,7 @@ The entry point is main.py. When you execute it (with python main.py) make sure 
 .. code-block::
 
     set CONNECTION_STRING=postgresql://user:password@host/database
-    python main.py
+    python main.py path/to/watch
+
+
+path/to/watch is the path where waybill creation and waybill closing files will be placed
