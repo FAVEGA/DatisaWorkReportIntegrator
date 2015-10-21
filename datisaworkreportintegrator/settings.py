@@ -1,0 +1,15 @@
+INSTALLER_PRODUCT_CODE_HEADER = '90090'
+PRODUCT_CODE_COLUMN = 3
+WAYBILL_NUMBER_COLUMN = 2
+QUANTITY_COLUMN = 5
+PRICE_COLUMN = 13
+USER_ID = 3351
+WAYBILL_CREATION_FILE_EXTENSION = '.txt'
+WAYBILL_CLOSING_FILE_EXTENSION = '.csv'
+
+CUSTOMER_CODE_REGEX = "<codigo_cliente>(.*)"
+CUSTOMER_NAME_REGEX = "<nombre_cliente>(.*)"
+CUSTOMER_CITY_REGEX = "<poblacion_cliente>(.*)"
+CUSTOMER_STATE_REGEX = "<provincia_cliente>(.*)"
+WAYBILL_NUMBER_REGEX = "<numero_albaran>(.*)"
+PRODUCT_REGEX = "<codigo>(.*)<valor>(.*)"
