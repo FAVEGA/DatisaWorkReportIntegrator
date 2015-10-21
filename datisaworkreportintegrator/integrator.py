@@ -67,7 +67,7 @@ def check_modified_reports(modified_reports):
         else:
             print('Finishing report ' + str(report.id))
             report.finished = True
-            report.cost = report_cost
+            report.sold_for = report_cost
             db.add(report)
 
 
