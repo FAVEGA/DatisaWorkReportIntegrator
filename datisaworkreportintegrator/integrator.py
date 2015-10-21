@@ -9,7 +9,7 @@ from . import parser
 
 
 class Handler(FileSystemEventHandler):
-    def on_created(self, event):
+    def on_modified(self, event):
         try:
             if os.path.exists(event.src_path):
                 with open(event.src_path, 'r') as file:
