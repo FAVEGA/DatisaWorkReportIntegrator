@@ -28,11 +28,18 @@ def parse_waybill_creation_file_products(input_string):
 def parse_waybill_closing_file(input_string):
     csv_file = StringIO(input_string)
     reader = csv.reader(csv_file, delimiter=';', quotechar='"')
-    rows = filter(is_row_installer_product, reader)
+    rows = list(reader)
+    filtered_rows = filter(is_row_installer_product, rows)
     result = dict()
-    for waybill_number, product_rows in groupby(rows, key=lambda x: x[settings.WAYBILL_NUMBER_COLUMN]):
-        result[waybill_number] = sum(map(get_waybill_closing_file_row_price, product_rows))
+    for waybill_number, product_rows in groupby(filtered_rows, key=lambda x: x[settings.WAYBILL_NUMBER_COLUMN]):
+        if is_waybill_invoiced(waybill_number, rows):
+            result[waybill_number] = sum(map(get_waybill_closing_file_row_price, product_rows))
     return result
+
+
+def is_waybill_invoiced(waybill_number, rows):
+    filtered_rows = [row for row in rows if row[settings.WAYBILL_NUMBER_COLUMN] == waybill_number]
+    return filtered_rows[0][4] == "1"
 
 
 def get_waybill_closing_file_row_price(row):
