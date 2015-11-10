@@ -120,8 +120,10 @@ def add_waybill_number_to_report(report_id, waybill_number):
 
 
 def get_report_for_waybill_number(waybill_number):
-    report_id = [pair[0] for pair in Session().query(t_report_waybillnum) if pair[1] == waybill_number][0]
-    return Session().query(Report).filter(Report.id == report_id).first()
+    reports = [pair[0] for pair in Session().query(t_report_waybillnum) if pair[1] == waybill_number]
+    if len(reports) == 0:
+        return None
+    return Session().query(Report).filter(Report.id == reports[0]).first()
 
 
 def get_waybill(number):
