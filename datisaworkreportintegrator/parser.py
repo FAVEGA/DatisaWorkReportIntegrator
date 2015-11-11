@@ -47,14 +47,7 @@ def get_waybill_closing_file_row_price(row):
 
 
 def parse_float(string: str):
-    if ',' in string and '.' in string:
-        if string.rfind(',') > string.rfind('.'):
-            string = string.replace('.', '')
-        elif string.rfind(',') < string.rfind('.'):
-            string = string.replace(',', '')
-
-    if ',' in string and '.' not in string:
-        string = string.replace(',', '.')
+    string = string.replace(',', '.')
     return float(string)
 
 

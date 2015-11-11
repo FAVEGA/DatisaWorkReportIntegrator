@@ -118,10 +118,3 @@ def test_parse_waybill_closing_file_with_decimals():
 def test_parse_float():
     assert parse_float("2,5") == 2.5
     assert parse_float("2,50") == 2.5
-    assert parse_float("2.5") == 2.5
-    assert parse_float("2.50") == 2.5
-    assert parse_float("2250") == 2250
-    assert parse_float("2250,50") == 2250.50
-    assert parse_float("2250.50") == 2250.50
-    assert parse_float("2,250.50") == 2250.50
-    assert parse_float("2.250,50") == 2250.50
