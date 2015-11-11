@@ -43,15 +43,18 @@ def is_waybill_invoiced(waybill_number, rows):
 
 
 def get_waybill_closing_file_row_price(row):
-    return parse_price(row[settings.QUANTITY_COLUMN]) * parse_price(row[settings.PRICE_COLUMN])
+    return parse_float(row[settings.QUANTITY_COLUMN]) * parse_float(row[settings.PRICE_COLUMN])
 
 
-def parse_price(string: str):
-    delimiters = (',', '.')
-    for delimiter in delimiters:
-        if delimiter in string and string.index(delimiter) == len(string) - 3:
-            string = string[:-3]
-        string = string.replace(delimiter, '')
+def parse_float(string: str):
+    if ',' in string and '.' in string:
+        if string.rfind(',') > string.rfind('.'):
+            string = string.replace('.', '')
+        elif string.rfind(',') < string.rfind('.'):
+            string = string.replace(',', '')
+
+    if ',' in string and '.' not in string:
+        string = string.replace(',', '.')
     return float(string)
 
 

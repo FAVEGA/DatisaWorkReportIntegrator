@@ -12,6 +12,12 @@ from . import parser
 class Handler(FileSystemEventHandler):
     def on_modified(self, event):
         """
+        Called whenever a file is modified in the watched directory
+        TODO: Move this somewhere else.
+        :param event:
+        :return:
+        """
+        """
         This sleep is necessary because watchdog provides the callback when the file is modified, not closed,
         and there'll be a small delay between the file being modified and closed.
         """
@@ -19,6 +25,7 @@ class Handler(FileSystemEventHandler):
         handle_file(event.src_path)
 
 
+# noinspection PyBroadException
 def handle_file(path):
     try:
         lines = read_and_remove_file(path)
@@ -37,6 +44,7 @@ def read_and_remove_file(path):
             lines = "".join([line for line in file.readlines() if line])
         os.remove(path)
         return lines
+    raise RuntimeError("Unable to read file " + path)
 
 
 def handle_closing_waybill(lines):
@@ -61,7 +69,7 @@ def check_modified_reports(modified_reports):
         for waybill_number in report.waybill_numbers:
             waybill = db.get_waybill(waybill_number)
             if waybill is None:
-                print('Report is mising waybill price for waybill number ' + waybill_number)
+                print('Report is missing waybill price for waybill number ' + waybill_number)
                 break
             report_cost += waybill.sold_for
         else:
