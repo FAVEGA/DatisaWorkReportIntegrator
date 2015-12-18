@@ -2,7 +2,7 @@
 import os
 
 from sqlalchemy import BigInteger, Boolean, Column, Float, ForeignKey, Integer, LargeBinary, String, Table, \
-    create_engine, Sequence, insert
+    create_engine, Sequence, insert, select, event, exc
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -11,6 +11,19 @@ engine = create_engine(os.environ.get("CONNECTION_STRING"))
 Base = declarative_base(bind=engine)
 metadata = Base.metadata
 Session = scoped_session(sessionmaker(bind=engine))
+
+
+@event.listens_for(engine, "engine_connect")
+def ping_connection(connection, branch):
+    if branch:
+        return
+    try:
+        connection.scalar(select([1]))
+    except exc.DBAPIError as err:
+        if err.connection_invalidated:
+            connection.scalar(select([1]))
+        else:
+            raise
 
 
 class Job(Base):

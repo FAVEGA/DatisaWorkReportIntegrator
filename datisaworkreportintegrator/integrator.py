@@ -33,9 +33,10 @@ def handle_file(path):
             handle_new_waybill(lines)
         elif path.endswith(settings.WAYBILL_CLOSING_FILE_EXTENSION):
             handle_closing_waybill(lines)
-        db.Session.remove()
     except Exception:
         traceback.print_exc()
+    finally:
+        db.Session.remove()
 
 
 def read_and_remove_file(path):
