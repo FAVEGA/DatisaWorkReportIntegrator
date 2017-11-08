@@ -139,6 +139,10 @@ def get_report_for_waybill_number(waybill_number):
     return Session().query(Report).filter(Report.id == reports[0]).first()
 
 
+def get_waybill_numbers():
+    return [pair[1] for pair in Session().query(t_report_waybillnum)]
+
+
 def get_waybill(number):
     return Session().query(Waybill).filter(Waybill.number == number).first()
 

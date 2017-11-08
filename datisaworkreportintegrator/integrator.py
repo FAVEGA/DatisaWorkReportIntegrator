@@ -84,6 +84,9 @@ def handle_new_waybill(lines):
     print('Handling new waybill file...')
     waybill = parser.parse_waybill_creation_file(lines)
     report = db.get_first_open_report_for_customer(waybill['customer_code'])
+    if waybill['number'] in db.get_waybill_numbers():
+        print('Waybill {} is already in database'.format(waybill['number']))
+        return
     if report is not None:
         if waybill['number'] not in report.waybill_numbers:
             update_old_report_with_waybill(report, waybill)
