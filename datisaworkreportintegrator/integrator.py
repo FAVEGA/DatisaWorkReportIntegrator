@@ -9,7 +9,25 @@ from . import settings
 from . import parser
 
 
+class Integrator:
+    def __init__(self, path):
+        self.path = path
+        self.files = set()
+
+    def run(self):
+        while True:
+            files = {f for f in os.listdir(self.path)
+                     if os.path.isfile(os.path.join(self.path, f))}
+            self.files |= files
+            for path in self.files:
+                handle_file(path)
+            sleep(1)
+
+
 class Handler(FileSystemEventHandler):
+    def __init__(self, integrator):
+        self.integrator = integrator
+
     def on_modified(self, event):
         """
         Called whenever a file is modified in the watched directory
@@ -17,33 +35,28 @@ class Handler(FileSystemEventHandler):
         :param event:
         :return:
         """
-        """
-        This sleep is necessary because watchdog provides the callback when the file is modified, not closed,
-        and there'll be a small delay between the file being modified and closed.
-        """
-        sleep(0.1)
-        handle_file(event.src_path)
+        self.integrator.files.add(event.src_path)
 
 
 # noinspection PyBroadException
 def handle_file(path):
     try:
-        lines = read_and_remove_file(path)
+        lines = read_file(path)
         if path.endswith(settings.WAYBILL_CREATION_FILE_EXTENSION):
             handle_new_waybill(lines)
         elif path.endswith(settings.WAYBILL_CLOSING_FILE_EXTENSION):
             handle_closing_waybill(lines)
+        os.remove(path)
     except Exception:
         traceback.print_exc()
     finally:
         db.Session.remove()
 
 
-def read_and_remove_file(path):
+def read_file(path):
     if os.path.exists(path):
         with open(path) as file:
             lines = "".join([line for line in file.readlines() if line])
-        os.remove(path)
         return lines
     raise RuntimeError("Unable to read file " + path)
 

@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-engine = create_engine(os.environ.get("CONNECTION_STRING"))
+engine = create_engine(os.environ.get("CONNECTION_STRING"), pool_size=5)
 Base = declarative_base(bind=engine)
 metadata = Base.metadata
 Session = scoped_session(sessionmaker(bind=engine))
